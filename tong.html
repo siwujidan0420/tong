@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给桐的一封信</title>
+    <style>
+        :root { --accent: #ffffff; --shadow: rgba(0,0,0,0.8); }
+        body { margin: 0; background: #000; height: 100vh; overflow: hidden; font-family: "PingFang SC", "Songti SC", serif; transition: background 1s ease; cursor: pointer; }
+        
+        .bg-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center; 
+            transition: opacity 2s ease, transform 10s linear; 
+            opacity: 0; z-index: 1; transform: scale(1);
+            filter: brightness(0.5); 
+        }
+        .bg-visible { opacity: 1; transform: scale(1.05); }
+
+        canvas { position: absolute; top: 0; left: 0; z-index: 5; pointer-events: none; }
+        
+        .page { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #fff; transition: all 1.5s ease; z-index: 10; pointer-events: none; opacity: 0; transform: translateY(30px); }
+        .active { opacity: 1; transform: translateY(0); }
+
+        h1 { font-size: 1.8rem; letter-spacing: 8px; text-shadow: 0 4px 20px var(--shadow); margin-bottom: 40px; font-weight: 300; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 15px; }
+        
+        .wish-text { 
+            font-size: 1.05rem; line-height: 2.6; color: rgba(255,255,255,0.9); 
+            padding: 30px; max-width: 600px; font-weight: 300; letter-spacing: 1.5px;
+            background: rgba(0,0,0,0.3); 
+            border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(3px); text-align: left; 
+        }
+
+        .guide-hint { position: fixed; top: 85%; color: #fff; font-size: 0.8rem; letter-spacing: 4px; animation: breathe 4s infinite; z-index: 15; pointer-events: none; opacity: 0.7; }
+        
+        #nextBtn { position: fixed; bottom: 40px; right: 40px; z-index: 100; padding: 12px 30px; border: 1px solid rgba(255,255,255,0.4); background: rgba(0,0,0,0.4); color: #fff; border-radius: 2px; cursor: pointer; font-size: 0.85rem; backdrop-filter: blur(5px); pointer-events: auto; transition: all 0.6s; letter-spacing: 2px; }
+        #nextBtn:hover { background: rgba(255,255,255,0.9); color: #000; }
+
+        .pop-text { position: fixed; z-index: 100; pointer-events: none; color: #fff; font-size: 0.9rem; animation: floatUp 5s ease-out forwards; text-shadow: 0 2px 8px #000; font-family: "KaiTi", serif; }
+        
+        @keyframes breathe { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+        @keyframes floatUp { 0% { opacity: 0; transform: translateY(0); } 20% { opacity: 1; transform: translateY(-20px); } 100% { opacity: 0; transform: translateY(-120px); } }
+    </style>
+</head>
+<body onclick="handleInteraction(event)">
+    
+    <audio id="bgm" loop><source src="love.mp3" type="audio/mpeg"></audio>
+
+    <div id="bg1" class="bg-layer bg-visible" style="background-image: url('luoyang.jpg');"></div>
+    <div id="bg2" class="bg-layer" style="background-image: url('dunhuang.jpg');"></div>
+    <div id="bg3" class="bg-layer" style="background-color: #121212;"></div>
+    <div id="bg4" class="bg-layer" style="background-image: url('us.jpg');"></div>
+    <div id="bg5" class="bg-layer" style="background-color: #000000;"></div>
+
+    <canvas id="canvas"></canvas>
+    <div id="hintText" class="guide-hint">桐，新年快乐</div>
+
+    <div id="page1" class="page active">
+        <h1>2026 · 新年</h1>
+        <div class="wish-text">
+            桐，新年快乐。<br>
+            外面的烟花很吵，大家都在庆祝新的开始。<br>
+            可在这份热闹里，我却突然很想念那年的<span style="border-bottom:1px solid #fff;">洛阳</span>。<br>
+            <br>
+            整理七月远航的行李时，这张照片掉了出来。<br>
+            那时候的阳光真好啊，<br>
+            好到让我觉得，我们本该一直那样走下去。
+        </div>
+    </div>
+
+    <div id="page2" class="page">
+        <h1>2025 · 十月敦煌</h1>
+        <div class="wish-text">
+            还记得鸣沙山的落日吗？<br>
+            十月的风很大，但牵着你的手很暖。<br>
+            在月牙泉边许愿的时候，我其实偷偷看你了很久。<br>
+            那时候我们都以为，<br>
+            只要足够相爱，就能抵挡所有的洪流。<br>
+            <br>
+            可我们都低估了，<span style="border-bottom:1px solid #fff; padding-bottom:3px;">时间</span>的重量。
+        </div>
+    </div>
+
+    <div id="page3" class="page">
+        <h1>抱歉，弄丢了你</h1>
+        <div class="wish-text">
+            后来，日子变得很匆忙。<br>
+            你为了考研挑灯夜战，我为了考试焦头烂额。<br>
+            我们都太想给未来攒一张入场券，<br>
+            却在忙碌中，不小心把最重要的人弄丢在了半路。<br>
+            <br>
+            我不怪距离，也不怪时间。<br>
+            我只怪我自己，在你最需要陪伴的时候，<br>
+            给你的只有<span style="border-bottom:1px solid #fff; padding-bottom:3px;">沉默和缺席</span>。
+        </div>
+    </div>
+
+    <div id="page4" class="page">
+        <h1>不想只做过客</h1>
+        <div class="wish-text">
+            分开的这段日子，我去过很多地方。<br>
+            但没有你的风景，再美也只是背景板。<br>
+            我骗得过所有人，说我已经放下了。<br>
+            可骗不过深夜翻看相册时的那份<span style="border-bottom:1px solid #fff; padding-bottom:3px;">不甘心</span>。<br>
+            <br>
+            桐，我们还没好好的告别，<br>
+            怎么能就这样走散在人海里？
+        </div>
+    </div>
+
+    <div id="page5" class="page">
+        <h1>最后一次机会</h1>
+        <div class="wish-text">
+            七月，我就要远航出海了。<br>
+            去往地图上的深蓝，归期未定。<br>
+            在那之前，我想再见你一面。<br>
+            <br>
+            不是为了打扰你的生活，<br>
+            只是想把那些错过的时光，试着找回来。<br>
+            如果洛阳的风和敦煌的月还在你心里，<br>
+            <span style="border-bottom:1px solid #fff; padding-bottom:3px;">给我一个见面的机会，好吗？</span>
+        </div>
+    </div>
+
+    <button id="nextBtn" onclick="nextPage(event)">下一页</button>
+
+    <script>
+        const canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
+        let particles = [], isMusicPlaying = false, currentPage = 1;
+        
+        const phrases = [
+            "新年快乐，桐", "真的很想你", "洛阳的风还在吹", "别来无恙", 
+            "不想留遗憾", "输给了时间，想赢回你", "只要你回头"
+        ];
+
+        const themes = [
+            {c:['#ffccd5','#ffffff','#ffeb3b']}, 
+            {c:['#ffd700','#ff9800','#ffffff']}, 
+            {c:['#b0bec5','#ffffff','#607d8b']}, 
+            {c:['#ff4081','#ffffff','#f50057']}, 
+            {c:['#ffffff','#e0e7ff','#93f5ff']}
+        ];
+
+        function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+        window.addEventListener('resize',resize);resize();
+
+        class P {
+            constructor(x,y,c,v){this.x=x;this.y=y;this.c=c;this.v=v;this.a=1;}
+            draw(){ctx.save();ctx.globalAlpha=this.a;ctx.beginPath();ctx.arc(this.x,this.y,1.8,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill();ctx.restore();}
+            update(){this.v.x*=0.97;this.v.y*=0.97;this.v.y+=0.06;this.x+=this.v.x;this.y+=this.v.y;this.a-=0.01;}
+        }
+
+        function createFirework(x, y) {
+            for (let i = 0; i < 50; i++) {
+                const ang = (Math.PI * 2 / 50) * i, spd = Math.random() * 4 + 2;
+                particles.push(new P(x, y, themes[currentPage-1].c[Math.floor(Math.random()*3)], {x: Math.cos(ang) * spd, y: Math.sin(ang) * spd}));
+            }
+        }
+
+        function handleInteraction(e) {
+            if (e.target.tagName === 'BUTTON') return;
+            if (!isMusicPlaying) { 
+                document.getElementById('bgm').play().catch(()=>{}); 
+                isMusicPlaying = true; 
+                document.getElementById('hintText').style.display = 'none'; 
+            }
+            createFirework(e.clientX, e.clientY);
+            if (Math.random() > 0.45) { 
+                const t = document.createElement('div'); t.className = 'pop-text';
+                t.style.left = e.clientX + 'px'; t.style.top = e.clientY + 'px';
+                t.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+                document.body.appendChild(t); setTimeout(() => t.remove(), 4000);
+            }
+        }
+
+        function nextPage(e) {
+            e.stopPropagation();
+            if (currentPage < 5) {
+                document.getElementById(`page${currentPage}`).classList.remove('active');
+                currentPage++;
+                document.getElementById(`page${currentPage}`).classList.add('active');
+                
+                document.querySelectorAll('.bg-layer').forEach(bg => {
+                    bg.classList.remove('bg-visible');
+                    setTimeout(() => { if(!bg.classList.contains('bg-visible')) bg.style.transform = 'scale(1)'; }, 1000);
+                });
+                document.getElementById(`bg${currentPage}`).classList.add('bg-visible');
+
+                document.getElementById('nextBtn').textContent = currentPage === 5 ? '回到最初' : '下一页';
+            } else {
+                document.getElementById(`page${currentPage}`).classList.remove('active');
+                currentPage = 1;
+                document.getElementById(`page${currentPage}`).classList.add('active');
+                
+                document.querySelectorAll('.bg-layer').forEach(bg => bg.classList.remove('bg-visible'));
+                document.getElementById(`bg${currentPage}`).classList.add('bg-visible');
+                document.getElementById('nextBtn').textContent = '下一页';
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, i) => { if (p.a > 0) { p.update(); p.draw(); } else particles.splice(i, 1); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
